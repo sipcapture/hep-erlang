@@ -1,0 +1,6 @@
+.idea
+*.iml
+*.plt
+deps
+ebin
+erl_crash.dump
