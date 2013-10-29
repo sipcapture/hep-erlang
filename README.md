@@ -75,6 +75,7 @@ All integer fields are stored in network byte order.
 | Seconds             | 32 bits  | The timestamp in seconds since the Epoch when the included payload was captured.    |
 | Microseconds        | 32 bits  | The microseconds part of the timestamp.                                             |
 | Capture ID of node  | 16 bits  | A capture ID of the node. XXX: What does this exactly mean???                       |
+| *unused*            | 16 bits  | *unused*                                                                            |
 | Payload             | *2       | Payload (usually SIP message)                                                       |
 
 *1) Length is 32 bits for IPv4 and 128 bits for IPv6.

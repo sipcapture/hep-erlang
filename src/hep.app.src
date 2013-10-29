@@ -15,6 +15,7 @@
 {application, hep, [
 	{description, "hep - Homer Encapsulation Protocol"},
 	{vsn, "0.1.0"},
+	{modules, []},
 	{registered, []},
 	{applications, [
 		kernel,

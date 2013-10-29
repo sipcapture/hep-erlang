@@ -20,10 +20,12 @@
 
 -export([parse/1]).
 
--type protoco_family() :: inet | inet6.
+%% PF_INET = 2, PF_INET6 = 10
+-type protoco_family() :: 0..255.
 -export_type([protoco_family/0]).
 
--type protocol() :: udp | tcp | sctp | tls.
+%% UDP = 17
+-type protocol() :: 0..255.
 -export_type([protocol/0]).
 
 -type vendor_id() :: 0..65535.
@@ -32,23 +34,33 @@
 -type chunk_id() :: 0..65535.
 -export_type([chunk_id/0]).
 
--type vendor_chunk() :: {vendor_id(), chunk_id(), binary()}.
+-type chunk_key() :: {vendor_id(), chunk_id()}.
+-export_type([chunk_key/0]).
+
+-type chunk_value() :: binary().
+-export_type([chunk_value/0]).
+
+-type vendor_chunk() :: {chunk_key(), chunk_value()}.
 -export_type([vendor_chunk/0]).
+
+-type payload_type() :: 0..255.
+-export_type([payload_type/0]).
 
 -opaque state() :: #hep{}.
 -export_type([state/0]).
 
+%% @doc
+%% Convenience function, when you don't know, which version will be sent in a
+%% transport channel. This is only practical if you use this when your
+%% transport is UDP or when you are absolutely sure, you received the complete
+%% message, as HEP v1 and v2 are not well suited for streaming transports.
+%% @end
 -spec parse(binary()) -> {ok, state()} | {error, term(), binary()}.
-parse(<<1:8, Rest/binary>> = Packet) ->
-	parse(Rest, #hep{version = 1, unparsed = Packet});
-parse(<<2:8, Rest/binary>> = Packet) ->
-	parse(Rest, #hep{version = 2, unparsed = Packet});
-parse(<<"HEP3", _Rest/binary>> = Packet) ->
+parse(<<?HEP1:8, _Rest/binary>> = Packet) ->
+	hep_v1:parse(Packet);
+parse(<<?HEP2:8, _Rest/binary>> = Packet) ->
+	hep_v2:parse(Packet);
+parse(<<?HEP3, _Rest/binary>> = Packet) ->
 	hep_v3:parse(Packet);
 parse(Other) ->
 	{error, unexpected_packet, Other}.
-
-%% internal
-
-parse(_, State) ->
-	{ok, State}.

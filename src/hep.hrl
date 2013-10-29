@@ -14,6 +14,13 @@
 
 -ifndef(HEP_HRL).
 
+-define(PF_INET, 2).
+-define(PF_INET6, 10).
+
+-define(HEP1, 1).
+-define(HEP2, 2).
+-define(HEP3, "HEP3").
+
 -record(hep, {
 	version :: 1 | 2 | 3,
 	protocol_family :: hep:protoco_family(),
@@ -22,12 +29,20 @@
 	src_port :: inet:port_number(),
 	dst_ip :: inet:ip4_address() | inet:ip6_address(),
 	dst_port :: inet:port_number(),
-	timestamp :: erlang:timestamp(),
+	timestamp :: erlang:timestamp() | 'undefined',
 	capture_id :: non_neg_integer() | 'undefined',
+
+	%% vendor_chunks and payload_type are
+	%% undefined in HEP version 1 and 2
 	vendor_chunks = [] :: [hep:vendor_chunk()],
+	payload_type :: hep:payload_type() | 'undefined',
 	payload = <<>> :: binary(),
 
 	%% internal state
+
+	%% HEP v1 and v2 this is only the header length.
+	%% HEP v3 this is the total length.
+	length :: non_neg_integer(),
 	unparsed :: binary()
 }).
 
