@@ -54,7 +54,8 @@ All integer fields are stored in network byte order.
 | Payload             | *2       | Payload (usually SIP message)                                                       |
 
 *1) Length is 32 bits for IPv4 and 128 bits for IPv6.
-*2) Variable length not defined by metadata, so this protocol is really only suited for UDP.
+
+*2) Variable length not defined by metadata, so this protocol is really only well suited for UDP.
 
 Protocol Version 2
 ------------------
@@ -77,7 +78,8 @@ All integer fields are stored in network byte order.
 | Payload             | *2       | Payload (usually SIP message)                                                       |
 
 *1) Length is 32 bits for IPv4 and 128 bits for IPv6.
-*2) Variable length not defined by metadata, so this protocol is really only suited for UDP.
+
+*2) Variable length not defined by metadata, so this protocol is really only well suited for UDP.
 
 Protocol Version 3
 ------------------
@@ -88,7 +90,7 @@ Each packet in HEP version 3 starts with a header:
 |---------------------|----------|----------------------------------------------------------------------------------|
 | Protocol Identifier | 4 bytes  | Always contains "HEP3" for this version.                                         |
 | Total Length        | 2 bytes  | The total length of this packet, including Protocol Identifier and Total Length. |
-| Payload Chunks      | variable | The payload as chunks, with a length of "Total Length" minus 6.                  |
+| Chunks              | variable | The payload as chunks, with a length of "Total Length" minus 6.                  |
 
 All data is encapsulated in chunks:
 
