@@ -36,8 +36,8 @@
 -export_type([version/0]).
 
 %% PF_INET = 2, PF_INET6 = 10
--type protoco_family() :: 0..255.
--export_type([protoco_family/0]).
+-type protocol_family() :: 0..255.
+-export_type([protocol_family/0]).
 
 %% UDP = 17
 -type protocol() :: 0..255.
@@ -86,7 +86,7 @@ parse(Other) ->
 version(#hep{version = Version}) ->
 	Version.
 
--spec protocol_family(state()) -> protoco_family().
+-spec protocol_family(state()) -> protocol_family().
 protocol_family(#hep{protocol_family = ProtocolFamily}) ->
 	ProtocolFamily.
 

@@ -23,7 +23,7 @@
 
 -record(hep, {
 	version :: hep:version(),
-	protocol_family :: hep:protoco_family(),
+	protocol_family :: hep:protocol_family(),
 	protocol :: hep:protocol(),
 	src_ip :: inet:ip_address(),
 	src_port :: inet:port_number(),
@@ -42,8 +42,8 @@
 
 	%% HEP v1 and v2 this is only the header length.
 	%% HEP v3 this is the total length.
-	length :: non_neg_integer(),
-	unparsed :: binary()
+	length :: non_neg_integer() | 'undefined',
+	unparsed :: binary() | 'undefined'
 }).
 
 -define(HEP_HRL, true).
