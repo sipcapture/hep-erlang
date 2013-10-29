@@ -22,12 +22,12 @@
 -define(HEP3, "HEP3").
 
 -record(hep, {
-	version :: 1 | 2 | 3,
+	version :: hep:version(),
 	protocol_family :: hep:protoco_family(),
 	protocol :: hep:protocol(),
-	src_ip :: inet:ip4_address() | inet:ip6_address(),
+	src_ip :: inet:ip_address(),
 	src_port :: inet:port_number(),
-	dst_ip :: inet:ip4_address() | inet:ip6_address(),
+	dst_ip :: inet:ip_address(),
 	dst_port :: inet:port_number(),
 	timestamp :: erlang:timestamp() | 'undefined',
 	capture_id :: non_neg_integer() | 'undefined',

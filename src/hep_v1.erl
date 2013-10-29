@@ -30,6 +30,9 @@ DstPort:16/big, Rest/binary>> = Packet) when Version =:= ?HEP1 ->
 		protocol = Protocol,
 		src_port = SrcPort,
 		dst_port = DstPort,
+		%% Set timestamp, because this isn't included in HEP v1 messages.
+		%% This isn't terribly accurate, but it's better than none at all.
+		timestamp = now(),
 		unparsed = Packet});
 parse(Other) ->
 	{error, unexpected_packet, Other}.

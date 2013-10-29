@@ -163,6 +163,50 @@ Protocol types:
 | 16#09   | M3UA (SS7/SIGTRAN) |
 | 16#10   | IAX                |
 
+JSON representation
+-------------------
+
+```json
+[
+    {
+        "type": "HEP",
+        "version": 1,
+        "protocolFamily": 2,
+        "protocol": 17,
+        "srcIp": "192.168.3.11",
+        "srcPort": 5060,
+        "dstIp": "192.168.3.190",
+        "dstPort": 2048,
+        "timestamp": "2013-10-29T15:25:53.567Z",
+        "timestampUSecs": 123,
+        "captureId": null,
+        "vendorChunks": [],
+        "payload": {
+            "type": "SIP",
+            "data": "INVITE sip:100@pantech.intern SIP/2.0\r\n..."
+        }
+    },
+    {
+        "type": "HEP",
+        "version": 2,
+        "protocolFamily": 2,
+        "protocol": 17,
+        "srcIp": "192.168.3.12",
+        "srcPort": 5060,
+        "dstIp": "192.168.3.11",
+        "dstPort": 5060,
+        "timestamp": "2013-10-29T15:25:53:577Z",
+        "timestampUSecs": 0,
+        "captureId": 241,
+        "vendorChunks": [],
+        "payload": {
+            "type": "SIP",
+            "data": "INVITE sip:100@pantech.intern SIP/2.0\r\n..."
+        }
+    }
+]
+```
+
 Other Software Supporting HEP
 -----------------------------
 
