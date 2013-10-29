@@ -162,6 +162,18 @@ Protocol types:
 | 16#09   | M3UA (SS7/SIGTRAN) |
 | 16#10   | IAX                |
 
+Other Software Supporting HEP
+-----------------------------
+
+This is third-party software also supporting HEP.
+
+| Name                                            | HEP Versions Supported | Client | Server |
+|-------------------------------------------------|------------------------|--------|--------|
+| [captagent](http://code.google.com/p/captagent) | 1, 2, 3                | yes    | no     |
+| [FreeSWITCH](http://www.freeswitch.org)         | 1                      | yes    | no     |
+| [Kamailio](http://www.kamailio.org)             | 1, 2                   | yes    | yes    |
+| [OpenSIPS](http://www.opensips.org)             | 1, 2                   | yes    | yes    |
+
 Contributors
 ------------
 
