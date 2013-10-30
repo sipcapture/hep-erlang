@@ -38,7 +38,7 @@
 -export([parse/1]).
 
 -spec parse(binary()) -> {ok, hep:state()} | {error, term(), binary()}.
-parse(<<?HEP2, Length:16/big, Rest/binary>> = Packet) ->
+parse(<<?HEP3, Length:16/big, Rest/binary>> = Packet) ->
 	parse_chunks(Rest, Length - 6, #hep{version = 3, length = Length, unparsed = Packet});
 parse(Other) ->
 	{error, unexpected_packet, Other}.

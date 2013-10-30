@@ -61,10 +61,10 @@ new(10, Protocol, {S0, S1, S2, S3, S4, S5, S6, S7} = SrcIp, SrcPort,
 	}}.
 
 -spec parse(binary()) -> {ok, hep:state()} | {error, term(), binary()}.
-parse(<<Version:8, Length:8, ProtocolFamily:8, Protocol:8, SrcPort:16/big,
-DstPort:16/big, Rest/binary>> = Packet) when Version =:= ?HEP1 ->
+parse(<<?HEP1:8, Length:8, ProtocolFamily:8, Protocol:8, SrcPort:16/big,
+DstPort:16/big, Rest/binary>> = Packet) ->
 	parse(Rest, #hep{
-		version = Version,
+		version = ?HEP1,
 		length = Length,
 		protocol_family = ProtocolFamily,
 		protocol = Protocol,

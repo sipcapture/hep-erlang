@@ -21,10 +21,10 @@
 -export([parse/1]).
 
 -spec parse(binary()) -> {ok, hep:state()} | {error, term(), binary()}.
-parse(<<Version:8, Length:8, ProtocolFamily:8, Protocol:8, SrcPort:16/big,
-DstPort:16/big, Rest/binary>> = Packet) when Version =:= ?HEP2 ->
+parse(<<?HEP2:8, Length:8, ProtocolFamily:8, Protocol:8, SrcPort:16/big,
+DstPort:16/big, Rest/binary>> = Packet) ->
 	parse(Rest, #hep{
-		version = Version,
+		version = ?HEP2,
 		length = Length,
 		protocol_family = ProtocolFamily,
 		protocol = Protocol,
