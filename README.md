@@ -34,7 +34,38 @@ kind of transport channel, but most of the time UDP is used.
 Usage
 -----
 
-TBD
+Very basic example:
+
+```erlang
+
+-module(naive_udp_hep_listener).
+
+-export([start/1, stop/1]).
+
+start(Port) ->
+    ListenerPid = spawn(fun() ->
+        {ok, Socket} = gen_udp:open(Port, [binary, {active, true}]),
+        Loop = fun(Fun) ->
+            receive
+                {udp, _, _, _, Message} ->
+                    {ok, Hep} = hep_multi_parser:parse(Message),
+                    HepMsg = hep_transform:transform(Hep),
+                    error_logger:info_msg("~p~n", [HepMsg]),
+                    Fun(Fun);
+                stop ->
+                    gen_udp:close(Socket);
+                _ ->
+                    Fun(Fun)
+            end
+        end,
+        Loop(Loop)
+    end),
+    {ok, ListenerPid}.
+
+stop(ListenerPid) ->
+    ListenerPid ! stop.
+
+```
 
 Protocol Version 1
 ------------------
