@@ -18,6 +18,10 @@
 
 -export([parse/1]).
 
+%% @doc When the complete packet is available and it's the only message in
+%% the buffer, you can use this parser and it will parse all three versions
+%% on the same channel.
+-spec parse(binary()) -> {ok, hep:state()} | {error, term(), binary()}.
 parse(<<1:8, _/binary>> = Packet) ->
 	hep_v1_parser:parse(Packet);
 parse(<<2:8, _/binary>> = Packet) ->

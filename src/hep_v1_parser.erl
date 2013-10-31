@@ -66,6 +66,7 @@ parse(Other) ->
 
 %% internal
 
+%% @private
 timestamp() ->
 	{Mega, S, USecs} = os:timestamp(),
 	Secs = (Mega * 1000000) + S,
