@@ -12,29 +12,17 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--ifndef(HEP_HRL).
+-module(hep_multi_parser).
 
--define(HEP_GENERIC(ChunkId), <<16#0000:16, ChunkId:16>>).
--define(HEP_IP_PROTOCOL_FAMILY, 16#0001).
--define(HEP_IP_PROTOCOL, 16#0002).
--define(HEP_IP_V4_SRC_ADDRESS, 16#0003).
--define(HEP_IP_V4_DST_ADDRESS, 16#0004).
--define(HEP_IP_V6_SRC_ADDRESS, 16#0005).
--define(HEP_IP_V6_DST_ADDRESS, 16#0006).
--define(HEP_PROTOCOL_SRC_PORT, 16#0007).
--define(HEP_PROTOCOL_DST_PORT, 16#0008).
--define(HEP_TIMESTAMP_SECS, 16#0009).
--define(HEP_TIMESTAMP_USECS, 16#000a).
--define(HEP_PAYLOAD_TYPE, 16#000b).
--define(HEP_CAPTURE_AGENT_ID, 16#000c).
--define(HEP_KEEP_ALIVE_SECS, 16#000d).
--define(HEP_AUTHENTICATE_KEY, 16#000e).
--define(HEP_PAYLOAD, 16#000f).
+%% API
 
--record(hep, {
-	version :: hep:version(),
-	chunks = [] :: [hep:chunk()]
-}).
+-export([parse/1]).
 
--define(HEP_HRL, true).
--endif.
+parse(<<1:8, _/binary>> = Packet) ->
+	hep_v1_parser:parse(Packet);
+parse(<<2:8, _/binary>> = Packet) ->
+	hep_v2_parser:parse(Packet);
+parse(<<"HEP3", _/binary>> = Packet) ->
+	hep_v3_parser:parse(Packet);
+parse(Packet) ->
+	{error, invalid_packet, Packet}.
