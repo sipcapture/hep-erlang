@@ -18,7 +18,7 @@ $ ./_rel/bin/hep_udp_listener console
 Then point some HEP generating source to your IP on port 9060/udp and do some
 calls. You should see some HEP messages appear on your console.
 
-Enable HEPv1 on FreeSWITCH
+Enable HEPv1 in FreeSWITCH
 --------------------------
 
 ``` xml
@@ -49,7 +49,7 @@ Enable HEPv1 on FreeSWITCH
 </document>
 ```
 
-Enable HEPv1 or HEPv2 on OpenSIPS
+Enable HEPv1 or HEPv2 in OpenSIPS
 ---------------------------------
 
 TBD
