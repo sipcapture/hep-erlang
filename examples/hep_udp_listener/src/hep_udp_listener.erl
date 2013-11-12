@@ -38,16 +38,16 @@ start_link() ->
 
 -record(state, {
 	socket :: inet:socket(),
-	parser :: module()
+	decoder :: module()
 }).
 
 init(_Args) ->
 	Port = application:get_env(hep_udp_listener, listen_port, 9060),
-	Parser = application:get_env(hep_udp_listener, hep_parser, hep_multi_parser),
+	Decoder = application:get_env(hep_udp_listener, hep_parser, hep_multi_decoder),
 	{ok, Socket} = gen_udp:open(Port, [binary, {active, true}]),
 	{ok, #state{
 		socket = Socket,
-		parser = Parser
+		decoder = Decoder
 	}}.
 
 handle_call(_Request, _From, State) ->
@@ -56,17 +56,16 @@ handle_call(_Request, _From, State) ->
 handle_cast(_Request, State) ->
 	{noreply, State}.
 
-handle_info({udp, _, SrcIp, SrcPort, Packet}, #state{parser = Parser} = State) ->
-	{ok, Hep} = Parser:parse(Packet),
-	HepObj = hep_transform:transform(Hep),
+handle_info({udp, _, SrcIp, SrcPort, Packet}, #state{decoder = Decoder} = State) ->
+	Result = Decoder:decode(Packet),
 	error_logger:info_msg(
 		" ***~n"
-		" *** Source IP   : ~p~n"
-		" *** Source Port : ~p~n"
-		" *** Message~n"
-		"---------------------~n"
+		" *** Source IP     : ~p~n"
+		" *** Source Port   : ~p~n"
+		" *** Decoder Result:~n"
+		"--------------------~n"
 		"~p~n"
-		"---------------------~n", [SrcIp, SrcPort, HepObj]),
+		"--------------------~n", [SrcIp, SrcPort, Result]),
 	{noreply, State};
 handle_info(_Info, State) ->
 	{noreply, State}.

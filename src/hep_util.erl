@@ -12,17 +12,18 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(hep_websocket_app).
+%% @private
+-module(hep_util).
 
--behaviour(application).
+%% API
 
-% application
--export([start/2]).
--export([stop/1]).
+-export([timestamp_secs/1]).
+-export([timestamp_microsecs/1]).
 
-% application callbacks
-start(_Type, _Args) ->
-	hep_websocket_sup:start_link().
+-spec timestamp_secs(erlang:timestamp()) -> non_neg_integer().
+timestamp_secs({M, S, _U}) ->
+	M * 1000000 + S.
 
-stop(_State) ->
-	ok.
+-spec timestamp_microsecs(erlang:timestamp()) -> non_neg_integer().
+timestamp_microsecs({_M, _S, U}) ->
+	U.

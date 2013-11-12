@@ -12,16 +12,17 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-{application, hep_websocket, [
-	{description, "HEP example with websocket based console"},
-	{vsn, "0.1.0"},
-	{modules, []},
-	{registered, [hep_websocket_sup]},
-	{applications, [
-		kernel,
-		stdlib,
-		cowboy
-	]},
-	{mod, {hep_websocket_app, []}},
-	{env, []}
-]}.
+-module(hep_multi_decoder).
+
+%% API
+
+-export([decode/1]).
+
+decode(<<1:8, _Rest/binary>> = Packet) ->
+	hep_v1_decoder:decode(Packet);
+decode(<<2:8, _Rest/binary>> = Packet) ->
+	hep_v2_decoder:decode(Packet);
+decode(<<"HEP3", _Rest/binary>> = Packet) ->
+	hep_v3_decoder:decode(Packet);
+decode(<<Packet/binary>>) ->
+	{error, invalid_packet, Packet}.

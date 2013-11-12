@@ -25,37 +25,42 @@ decode(<<"HEP3", Length:16, _/binary>> = Packet) when Length >= 6 ->
 	read_chunk_header(Packet, 6, Length, #hep{version = 3}).
 
 %% @private
+%% TODO this needs some refactoring... ugly, ugly, ugly
 -spec read_chunk_header(binary(), non_neg_integer(), non_neg_integer(), hep:state()) ->
 	{ok, hep:state()} | {error, term(), binary()}.
-read_chunk_header(<<_:Offset/binary, VendorId:16, ChunkId:16, ChunkLen:16,
-		_/binary>> = Packet, Offset, Length, Hep0) when Offset + ChunkLen =< Length ->
-	ValueLen = ChunkLen - 6,
-	{ok, Value} = read_chunk_value(Packet, Offset + 6, ValueLen),
-	case decode_chunk(VendorId, ChunkId, ValueLen, Value, Hep0) of
-		{ok, Hep} ->
-			case Offset + ChunkLen =:= Length of
-				true ->
-					#hep{chunks = Chunks} = Hep,
-					{ok, Hep#hep{chunks = lists:reverse(Chunks)}};
-				false ->
-					read_chunk_header(Packet, Offset + ChunkLen, Length, Hep)
+read_chunk_header(Packet, Offset, Length, Hep0) ->
+	<<_:Offset/binary, VendorId:16, ChunkId:16, ChunkLen:16, _/binary>> = Packet,
+	case Offset + ChunkLen =< Length of
+		false ->
+			ValueLen = ChunkLen - 6,
+			{ok, Value} = read_chunk_value(Packet, Offset + 6, ValueLen),
+			case decode_chunk(VendorId, ChunkId, ValueLen, Value, Hep0) of
+				{ok, Hep} ->
+					case Offset + ChunkLen =:= Length of
+						true ->
+							#hep{chunks = Chunks} = Hep,
+							{ok, Hep#hep{chunks = lists:reverse(Chunks)}};
+						false ->
+							read_chunk_header(Packet, Offset + ChunkLen, Length, Hep)
+					end;
+				{error, Reason} ->
+					{error, Reason, Packet}
 			end;
-		{error, Reason} ->
-			{error, Reason, Packet}
-	end;
-read_chunk_header(Packet, _Offset, _Length, _Hep) ->
-	{error, invalid_packet, Packet}.
+		true ->
+			{error, invalid_packet, Packet}
+	end.
 
 %% @private
 -spec read_chunk_value(binary(), non_neg_integer(), non_neg_integer()) -> {ok, binary()}.
-read_chunk_value(<<_:Offset/binary, Value:Len/binary, _Rest/binary>>, Offset, Len) ->
+read_chunk_value(Packet, Offset, Len) ->
+	<<_:Offset/binary, Value:Len/binary, _Rest/binary>> = Packet,
 	{ok, Value}.
 
 %% @private
 -spec decode_chunk(hep:vendor_id(), hep:chunk_id(), hep:chunk_value_length(), binary, hep:state()) ->
 	{ok, hep:state()} | {error, term()}.
 decode_chunk(0, 1, 1, <<ProtocolFamily:8>>, Hep)
-		when ProtocolFamily =:= 2; ProtocolFamily =:= 10 ->
+	when ProtocolFamily =:= 2; ProtocolFamily =:= 10 ->
 	{ok, Hep#hep{protocol_family = ProtocolFamily}};
 decode_chunk(0, 2, 1, <<Protocol:8>>, Hep) ->
 	{ok, Hep#hep{protocol = Protocol}};

@@ -12,21 +12,22 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(hep_multi_parser).
+-ifndef(HEP_HRL).
 
-%% API
+-record(hep, {
+	version :: hep:version(),
+	protocol_family :: hep:uint8(),
+	protocol :: hep:uint8(),
+	src_ip :: inet:ip_address(),
+	src_port :: inet:port_number(),
+	dst_ip :: inet:ip_address(),
+	dst_port :: inet:port_number(),
+	timestamp :: erlang:timestamp(),
+	node_id :: hep:uint16() | hep:uint32() | undefined,
+	payload_type = 1 :: hep:uint8(),
+	payload = <<>> :: binary(),
+	chunks = [] :: [hep:chunk()]
+}).
 
--export([parse/1]).
-
-%% @doc When the complete packet is available and it's the only message in
-%% the buffer, you can use this parser and it will parse all three versions
-%% on the same channel.
--spec parse(binary()) -> {ok, hep:state()} | {error, term(), binary()}.
-parse(<<1:8, _/binary>> = Packet) ->
-	hep_v1_parser:parse(Packet);
-parse(<<2:8, _/binary>> = Packet) ->
-	hep_v2_parser:parse(Packet);
-parse(<<"HEP3", _/binary>> = Packet) ->
-	hep_v3_parser:parse(Packet);
-parse(Packet) ->
-	{error, invalid_packet, Packet}.
+-define(HEP_HRL, true).
+-endif.

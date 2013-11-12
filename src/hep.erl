@@ -18,46 +18,32 @@
 
 %% API
 
--export([get_version/1]).
--export([get_chunk/3]).
--export([get_chunks/1]).
+-type uint8() :: 0..255.
+-export_type([uint8/0]).
+
+-type uint16() :: 0..65535.
+-export_type([uint16/0]).
+
+-type uint32() :: 0..4294967295.
+-export_type([uint32/0]).
 
 -type version() :: 1 | 2 | 3.
 -export_type([version/0]).
 
--type chunk_key() :: binary().
--export_type([chunk_key/0]).
+-type chunk_value_length() :: 0..65535.
+-export_type([chunk_value_length/0]).
 
 -type chunk_value() :: binary().
 -export_type([chunk_value/0]).
 
--type chunk() :: {chunk_key(), chunk_value()}.
+-type chunk() :: {{vendor_id(), chunk_id()}, {chunk_value_length(), chunk_value()}}.
 -export_type([chunk/0]).
 
--type vendor_id() :: 16#0000..16#ffff.
+-type vendor_id() :: 1..65535.
 -export_type([vendor_id/0]).
 
--type chunk_id() :: 16#0000..16#ffff.
+-type chunk_id() :: uint16().
 -export_type([chunk_id/0]).
 
 -opaque state() :: #hep{}.
 -export_type([state/0]).
-
--spec get_version(state()) -> version().
-get_version(#hep{version = Version}) ->
-	Version.
-
--spec get_chunk(vendor_id(), chunk_id(), state()) ->
-	{ok, binary()} | not_found.
-get_chunk(VendorId, ChunkId, #hep{chunks = Chunks}) ->
-	Key = <<VendorId:16, ChunkId:16>>,
-  case lists:keyfind(Key, 1, Chunks) of
-		{_Key, Value} ->
-			{ok, Value};
-		_ ->
-			not_found
-	end.
-
--spec get_chunks(state()) -> [chunk()].
-get_chunks(#hep{chunks = Chunks}) ->
-	Chunks.
