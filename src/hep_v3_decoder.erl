@@ -116,5 +116,5 @@ put_ts_secs(TimestampSecs, #hep{timestamp = Timestamp} = Hep) ->
 -spec put_ts_usecs(non_neg_integer(), hep:state()) -> {ok, hep:state()}.
 put_ts_usecs(TimestampUSecs, #hep{timestamp = undefined} = Hep) ->
 	{ok, Hep#hep{timestamp = {0, 0, TimestampUSecs}}};
-put_ts_usecs(TimestampUSecs, #hep{timestamp = {M, S, _} = Hep}) ->
+put_ts_usecs(TimestampUSecs, #hep{timestamp = {M, S, _}} = Hep) ->
 	{ok, Hep#hep{timestamp = {M, S, TimestampUSecs}}}.
